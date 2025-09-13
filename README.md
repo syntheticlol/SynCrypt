@@ -291,7 +291,7 @@ MIT License. This tool is for research, red team, and blue team development only
 
 ---   gcc -o syncrypt.exe supercrypt_tool.c supercrypt.c
 
-   
+   ```
 
 ## Usage Scenarios2. **Run:**
 
@@ -323,6 +323,7 @@ MIT License. This tool is for research, red team, and blue team development only
 
 ---### Encrypting a Message
 
+```
 
 ## Blue Team Detection & AnalysisSelect mode (enc/dec/help): enc
 
@@ -416,17 +417,17 @@ Decrypted: Attack at dawn!
 
 **Regex for all formats:**  - Use ephemeral keys for one-time payloads.
 
-
+```
 
 (syn[0-9]{4}|sxxyxxn[0-9]{4}|sxyxxnx[0-9]{4}|xsxyxnx[0-9]{4}|sxyxnxx[0-9]{4})### Blue Team
 
-- **Detection Engineering:**
+```- **Detection Engineering:**
 
   - Develop YARA rules for repeated alphanumeric patterns (2 real, 1 junk) or for the presence of `enc.log` artifacts.
 
 **YARA Rule Example:**  - Use entropy and n-gram analysis to flag non-natural text blocks.
 
-yara  - Monitor for suspicious CLI activity or custom encryption binaries.
+```yara  - Monitor for suspicious CLI activity or custom encryption binaries.
 
 rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
@@ -440,7 +441,7 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
         $f3 = /sxyxxnx[0-9]{4}/## Example YARA Rule for Detection
 
-        $f4 = /xsxyxnx[0-9]{4}/yara
+        $f4 = /xsxyxnx[0-9]{4}/```yara
 
         $f5 = /sxyxnxx[0-9]{4}/rule SynCrypt_JunkPattern
 
@@ -450,11 +451,13 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 }        $junk = /([A-Za-z0-9]{2}[A-Za-z0-9]){10,}/
 
-    condition:
+```    condition:
 
         $junk
 
 ---}
+
+```
 
 ## Research & Development Roadmap
 
@@ -470,7 +473,7 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 - [ ] Add more junk patterns and adaptive masking
 
-- [ ] Provide Python and PowerShell wrappers
+---- [ ] Provide Python and PowerShell wrappers
 
 - [ ] Peer review and cryptanalysis
 
