@@ -1,34 +1,221 @@
-# SynCrypt: Advanced Polymorphic Encryption & Obfuscation Tool# SynCrypt
+<div align="center">
+  <img src="https://img.shields.io/badge/Polymorphic-Encryption-blueviolet?style=for-the-badge" alt="Polymorphic Encryption"/>
+  <img src="https://img.shields.io/badge/Junk%20Masked-Output-orange?style=for-the-badge" alt="Junk Masked Output"/>
+  <img src="https://img.shields.io/badge/Red%20%26%20Blue%20Team-Research-green?style=for-the-badge" alt="Red & Blue Team"/>
+</div>
 
+# SynCrypt
 
+> **Advanced Polymorphic Encryption & Obfuscation Tool**  
+> _A modern, research-focused encryption tool for payload delivery, detection evasion, and security research._
 
----A polymorphic, junk-masked, seed+nonce-based encryption tool for advanced obfuscation and secure text transformation.
+---
 
+## ✨ Features
 
+- **Polymorphic Output:** Unique ciphertext for every encryption (random seed, nonce, encoding format)
+- **Junk Masking:** Obfuscates output and headers with random alphanumeric junk
+- **Multiple Encoding Formats:** Five unpredictable encoding patterns (e.g., `synxxxx`, `sxxyxxn`, ...)
+- **Compact Header:** 32-byte seed + 16-byte nonce (masked)
+- **Symmetric Key:** 32-byte (256-bit) key
+- **CLI User Interface:** Interactive prompts for mode, key, and input
+- **Output to File:** Encrypted results written to `enc.log`
 
-## Table of Contents## Features
+---
 
-- [Overview](#overview)- **Polymorphic Encryption:** Each encryption uses a random seed and nonce, producing unique output for the same input every time.
+## 📖 Table of Contents
 
-- [Features](#features)- **Junk Masking:** Encrypted output and headers are obfuscated with random alphanumeric junk, making pattern analysis and detection difficult.
+- [Overview](#overview)
+- [Features](#-features)
+- [How It Works](#how-it-works)
+- [Quick Start](#quick-start)
+- [Usage Examples](#usage-examples)
+- [Red Team Use Cases](#red-team-use-cases)
+- [Blue Team/Detection Research](#blue-teamdetection-research)
+- [Comparison to Other Encryption Schemes](#comparison-to-other-encryption-schemes)
+- [Detection Evasion & Limitations](#detection-evasion--limitations)
+- [YARA/Regex Detection Examples](#yararegex-detection-examples)
+- [Research & Development Roadmap](#research--development-roadmap)
+- [FAQ](#faq)
+- [License & Disclaimer](#license--disclaimer)
 
-- [How SynCrypt Works](#how-syncrypt-works)- **Compact Header:** Only a 32-byte seed and 16-byte nonce are stored (masked), keeping headers small and efficient.
+---
 
-- [Usage Scenarios](#usage-scenarios)- **Symmetric Key:** Uses a 32-byte (256-bit) key for encryption and decryption.
+## 📝 Overview
 
-- [Red Team Applications](#red-team-applications)- **CLI User Interface:** Interactive prompts for mode, key, and input.
+SynCrypt is a polymorphic encryption and obfuscation tool for red team payload delivery, C2 channel evasion, and blue team detection research. It combines custom block cipher logic, junk-masked output, and unpredictable encoding formats to defeat static, signature, and entropy-based detection.
 
-- [Blue Team Detection & Analysis](#blue-team-detection--analysis)- **Output to File:** Encrypted results are written to `enc.log` for easy retrieval.
+---
 
-- [Comparison to Standard Encryption](#comparison-to-standard-encryption)
+## ⚙️ How It Works
 
-- [Detection Evasion & Limitations](#detection-evasion--limitations)## How It Works
+1. **Seed & Nonce Generation:** Random 32-byte seed and 16-byte nonce for each encryption
+2. **Junk Masking:** After every 2 real characters, 1 random alphanumeric junk character is inserted
+3. **Multiple Encoding Formats:** Each byte is encoded using one of five unpredictable formats
+4. **Encryption:** Plaintext is encrypted with a custom S-box and encoding map, then masked
+5. **Decryption:** Header and ciphertext are unmasked, S-box and map are regenerated, and plaintext is recovered
 
-- [YARA/Regex Detection Examples](#yararegex-detection-examples)1. **Seed & Nonce Generation:**
+---
 
-- [Research & Development Roadmap](#research--development-roadmap)   - For each encryption, a random 32-byte seed and 16-byte nonce are generated.
+## 🚀 Quick Start
 
-- [FAQ](#faq)   - The S-box and encoding map are deterministically derived from the seed+nonce.
+```sh
+# Build
+gcc -o syncrypt.exe syncrypt_tool.c syncrypt.c
+
+# Run
+syncrypt.exe
+```
+
+---
+
+## 💡 Usage Examples
+
+### Encrypting a Message
+
+```
+Select mode (enc/dec/help): enc
+Generate random key? (y/n): y
+Enter text to encrypt: Attack at dawn!
+[+] Output written to enc.log
+```
+
+### Decrypting a Message
+
+```
+Select mode (enc/dec/help): dec
+Generate random key? (y/n): n
+Enter key (hex, 32 bytes): <your-key-here>
+Enter encrypted text (synXXXX): <masked-encrypted-output>
+Paste header from encryption output: <masked-header>
+Decrypted: Attack at dawn!
+```
+
+---
+
+## 🛡️ Red Team Use Cases
+
+- **Payload Evasion:** Polymorphic, junk-masked output can evade YARA, regex, and static pattern-based detection
+- **C2 Channels:** Obfuscated output can be tunneled through text-based protocols
+- **Payload Staging:** Small, self-contained headers and output are ideal for staged payloads or loader beacons
+- **Bypassing DLP/IDS:** Junk-masked output can bypass naive DLP/IDS rules
+- **Chaining:** Combine with steganography, protocol tunneling, or other obfuscation for layered evasion
+
+---
+
+## 🔬 Blue Team/Detection Research
+
+- **Detection Challenges:**
+  - Junk-masked output breaks simple regex, YARA, and entropy-based rules
+  - Polymorphic output means no two encryptions are alike
+  - Multiple encoding formats defeat fixed-pattern matching
+- **Detection Opportunities:**
+  - Look for repeated patterns of alphanumeric junk (2 real, 1 junk)
+  - Use statistical analysis to spot non-natural character distributions
+  - Monitor for the presence of the tool or its CLI artifacts (e.g., `enc.log`)
+- **Reverse Engineering:**
+  - Blue teams can reconstruct the S-box/map if the seed+nonce and key are recovered
+  - Junk removal is deterministic if the pattern is known (2 real, 1 junk)
+
+---
+
+## 📊 Comparison to Other Encryption Schemes
+
+| Feature                | SynCrypt                | AES (CBC/CTR)         | RC4/ChaCha20           | XOR/Stream Ciphers     |
+|------------------------|-------------------------|-----------------------|------------------------|------------------------|
+| Key Size               | 256 bits (32 bytes)     | 128/192/256 bits      | 128/256 bits           | Any                    |
+| Header Size            | 48 bytes (masked)       | 16 bytes (IV)         | 8-12 bytes (nonce)     | None/Optional          |
+| Output Polymorphism    | High (junk, seed+nonce) | Low (IV/nonce only)   | Low (nonce only)       | None                   |
+| Output Obfuscation     | Junk-masked, non-base64 | None (raw/base64)     | None (raw/base64)      | None                   |
+| Detection Resistance   | High (junk, variable)   | Low                   | Low                    | Very Low               |
+| Standardized           | No (custom)             | Yes                   | Yes                    | No                     |
+| Performance            | Moderate                | High                  | High                   | Very High              |
+| Cryptanalysis          | Not peer-reviewed       | Peer-reviewed         | Peer-reviewed          | Weak                   |
+
+---
+
+## 🕵️ Detection Evasion & Limitations
+
+**Strengths:**
+- Defeats static, signature, and entropy-based detection
+- Polymorphic output and junk masking make pattern matching difficult
+- Multiple encoding formats further complicate detection
+
+**Limitations:**
+- Not cryptographically secure for protecting sensitive data
+- Behavioral and contextual analysis can still reveal usage
+- If header and key are recovered, decryption is possible
+
+---
+
+## 🧑‍💻 YARA/Regex Detection Examples
+
+**Regex for all formats:**
+
+```
+(syn[0-9]{4}|sxxyxxn[0-9]{4}|sxyxxnx[0-9]{4}|xsxyxnx[0-9]{4}|sxyxnxx[0-9]{4})
+```
+
+**YARA Rule Example:**
+
+```yara
+rule SynCrypt_EncodedPattern {
+    strings:
+        $f1 = /syn[0-9]{4}/
+        $f2 = /sxxyxxn[0-9]{4}/
+        $f3 = /sxyxxnx[0-9]{4}/
+        $f4 = /xsxyxnx[0-9]{4}/
+        $f5 = /sxyxnxx[0-9]{4}/
+    condition:
+        any of them
+}
+```
+
+---
+
+## 🛠️ Research & Development Roadmap
+
+- [ ] Add support for file and binary payloads
+- [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic)
+- [ ] Add more junk patterns and adaptive masking
+- [ ] Provide Python and PowerShell wrappers
+- [ ] Peer review and cryptanalysis
+
+---
+
+## ❓ FAQ
+
+**Q: Is SynCrypt cryptographically secure?**
+
+> No. SynCrypt is designed for obfuscation, polymorphism, and red/blue team research, not for high-assurance cryptographic protection.
+
+**Q: Can SynCrypt output be detected?**
+
+> While junk masking and polymorphism defeat naive detection, advanced statistical or behavioral analysis can still reveal usage.
+
+**Q: Can I use SynCrypt for file encryption?**
+
+> SynCrypt is optimized for text and payloads. For large files, chunking and additional error handling are needed.
+
+**Q: How do I change the junk pattern?**
+
+> Edit the `mask_with_junk` and `unmask_junk` functions in the source code.
+
+**Q: What if I lose the header or key?**
+
+> Decryption is impossible without both the correct key and the exact header (seed+nonce).
+
+---
+
+## ⚖️ License & Disclaimer
+
+MIT License. This tool is for research, red team, and blue team development only. Do not use for protecting sensitive data in production environments.
+
+---
+
+<div align="center">
+  <sub>Maintained as <b>SynCrypt</b> &mdash; Original code: supercrypt_tool.c</sub>
+</div>
 
 - [License & Disclaimer](#license--disclaimer)2. **Junk Masking:**
 
@@ -104,7 +291,7 @@
 
 ---   gcc -o syncrypt.exe supercrypt_tool.c supercrypt.c
 
-   ```
+   
 
 ## Usage Scenarios2. **Run:**
 
@@ -136,7 +323,6 @@
 
 ---### Encrypting a Message
 
-```
 
 ## Blue Team Detection & AnalysisSelect mode (enc/dec/help): enc
 
@@ -230,17 +416,17 @@ Decrypted: Attack at dawn!
 
 **Regex for all formats:**  - Use ephemeral keys for one-time payloads.
 
-```
+
 
 (syn[0-9]{4}|sxxyxxn[0-9]{4}|sxyxxnx[0-9]{4}|xsxyxnx[0-9]{4}|sxyxnxx[0-9]{4})### Blue Team
 
-```- **Detection Engineering:**
+- **Detection Engineering:**
 
   - Develop YARA rules for repeated alphanumeric patterns (2 real, 1 junk) or for the presence of `enc.log` artifacts.
 
 **YARA Rule Example:**  - Use entropy and n-gram analysis to flag non-natural text blocks.
 
-```yara  - Monitor for suspicious CLI activity or custom encryption binaries.
+yara  - Monitor for suspicious CLI activity or custom encryption binaries.
 
 rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
@@ -254,7 +440,7 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
         $f3 = /sxyxxnx[0-9]{4}/## Example YARA Rule for Detection
 
-        $f4 = /xsxyxnx[0-9]{4}/```yara
+        $f4 = /xsxyxnx[0-9]{4}/yara
 
         $f5 = /sxyxnxx[0-9]{4}/rule SynCrypt_JunkPattern
 
@@ -264,13 +450,11 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 }        $junk = /([A-Za-z0-9]{2}[A-Za-z0-9]){10,}/
 
-```    condition:
+    condition:
 
         $junk
 
 ---}
-
-```
 
 ## Research & Development Roadmap
 
@@ -286,7 +470,7 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 - [ ] Add more junk patterns and adaptive masking
 
----- [ ] Provide Python and PowerShell wrappers
+- [ ] Provide Python and PowerShell wrappers
 
 - [ ] Peer review and cryptanalysis
 
