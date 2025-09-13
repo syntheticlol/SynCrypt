@@ -246,7 +246,7 @@ MIT License. This tool is for research, red team, and blue team development only
 
 ---   gcc -o syncrypt.exe supercrypt_tool.c supercrypt.c
 
-   ```
+   
 
 ## Usage Scenarios2. **Run:**
 
@@ -412,7 +412,7 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 - [ ] Add more junk patterns and adaptive masking
 
----- [ ] Provide Python and PowerShell wrappers
+- [ ] Provide Python and PowerShell wrappers
 
 - [ ] Peer review and cryptanalysis
 
