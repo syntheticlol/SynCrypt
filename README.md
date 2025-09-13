@@ -404,17 +404,13 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 - [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic)
 
-- [ ] Add more junk patterns and adaptive masking## Research & Development Roadmap
+- [ ] Add more junk patterns and adaptive masking##
 
-- [ ] Provide Python and PowerShell wrappers- [ ] Add support for file and binary payloads
+- [ ] Provide Python and PowerShell wrappers- 
 
-- [ ] Peer review and cryptanalysis- [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic)
-
-- [ ] Add more junk patterns and adaptive masking
-
-- [ ] Provide Python and PowerShell wrappers
-
-- [ ] Peer review and cryptanalysis
+- [ ] Peer review and cryptanalysis -
+      
+- [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic)
 
 ## FAQ
 
