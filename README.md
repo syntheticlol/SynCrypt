@@ -239,41 +239,17 @@ MIT License. This tool is for research, red team, and blue team development only
    - The plaintext is encrypted using a custom S-box and encoding map.
    - The result is encoded and masked with junk.## Quick Start
 
-5. **Decryption:**
 
    - The header and encrypted text are unmasked, the S-box and map are regenerated, and the original plaintext is recovered.1. **Build:**
    ```sh
-
----   gcc -o syncrypt.exe supercrypt_tool.c supercrypt.c
-
-   
-
-## Usage Scenarios2. **Run:**
-
 - **Red Team:** Payload delivery, C2 channel obfuscation, loader beacons, staged payloads, bypassing DLP/IDS, and evading static/entropy-based detection.   ```sh
-
 - **Blue Team:** Detection engineering, reverse engineering, forensic analysis, and research on advanced obfuscation and polymorphic encryption.   syncrypt.exe
 
 - **Research:** Demonstrating the limits of static detection, entropy analysis, and the need for behavioral and contextual security controls.   ```
-
-3. **Encrypt:**
-
----   - Select `enc` mode, generate or enter a key, input your plaintext.
-
-   - Output is written to `enc.log`.
-
-## Red Team Applications4. **Decrypt:**
-
-- **Payload Evasion:** SynCrypt's polymorphic, junk-masked output can evade YARA, regex, and static pattern-based detection.   - Select `dec` mode, enter the key, paste the masked encrypted text and header from `enc.log`.
-
-- **C2 Channels:** Obfuscated output can be tunneled through text-based protocols, blending with noisy traffic.
-
 - **Payload Staging:** Small, self-contained headers and output are ideal for staged payloads or loader beacons.---
-
 - **Bypassing DLP/IDS:** Junk-masked output can bypass naive DLP/IDS rules that expect base64 or hex.
 
 - **Chaining:** Combine with steganography, protocol tunneling, or other obfuscation for layered evasion.## Usage Examples
-
 
 
 
@@ -285,7 +261,6 @@ MIT License. This tool is for research, red team, and blue team development only
 Select mode (enc/dec/help): enc
 Generate random key? (y/n): n
 Enter key (hex, 32 bytes): 7e8a9c2b1d4f5e6a8b7c9d0e1f2a3b4c5d6e7f8091a2b3c4d5e6f7a8b9c0d1e2
-Enter text to encrypt: X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*
 [+] Output written to enc.log
 ```
 
@@ -297,7 +272,6 @@ Enter text to encrypt: X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST
   Encrypted:
   sybn0o19y4sGynp00o14esyyn0L07f4sPynB02N26Psyln0j17V2sRynV00i68psyYn0a10m7syyne00h90wsyQn0n05q5srynq00P35Msyxn0U02j1sjynl02O25Osyvn0A13O5swynU01x25wsyHn0M03s9sNynC01B22XsyCn0O14k2ssynf01z79ksyVn0A01T0sXynd00K85Nsyln0y00J4sYynH01f01Isyxn0j19s3sWynn01k01ksyUn0F02N6suynX00x27Zsyrn0z14b6smynn01M01gsyqn0O15o1skyne01t83lsyyn0h13N1skynO01a52UsyGn0z22q0sRynC00D94DsyIn0U07T7seyni02o30jsywn0a00y4syynz00p72VsySn0c03M5spynS00a90jsyln0f13V7sgynU01B27fsyAn0A24O6svynl01Z78Ysyln0N17T2srynK01d86Csypn0w19S3sRynt01E15ssyJn0W03h8sdynI00Z44csyon0B15z4sCynN02F31wsyln0Q13i4sJynT00v01Dsywn0v12x8shynR02C21Bsyln0D13V1sgyny00l48wsyGn0b09u1sSynB02M39bsyOn0r00x6sTynl00h80csysn0M21p0sxyno01h05Gsymn0G08N8skynE01u28Fsydn0X05O2stynO00g02bsygn0X06p6sEyny02a14NsyFn0e10t3sCynu01k95esyPn0Z03S4sHynK01l02Jsyun0G10g3sGyne00k94jsydn0q07z6sJyne01N84psyen0v20Q8sgynx01i34Esypn0j19S1srynD00Z48jsyAn0z13U4sJynl02L27csyhn0h09B9sfynQ02m05Ksyin0M09w5szyno01B04isyWn0y01b5sxynD01U25Usynn0F17S6skynS00r34ssyrn0t10E7sKynm01q24DsyCn0y17Z5sjynE00e14U
 
-- **Detection Opportunities:**
 
   - Look for repeated patterns of alphanumeric junk (e.g., 2 real, 1 junk) in traffic or files.### Decrypting a Message
 
@@ -317,7 +291,6 @@ Decrypted: Attack at dawn!
 
 ---```
 
-
 - SynCrypt is optimized for text and payloads. For large files, chunking and additional error handling are needed.
 
 **Note:** SynCrypt is not a replacement for strong cryptography in high-assurance environments. It is a research tool for obfuscation and detection evasion.
@@ -331,16 +304,10 @@ Decrypted: Attack at dawn!
 ## Detection Evasion & Limitations**Q: What if I lose the header or key?**
 
 - **Strengths:**- Decryption is impossible without both the correct key and the exact header (seed+nonce).
-
   - Defeats static, signature, and entropy-based detection.
 
   - Polymorphic output and junk masking make pattern matching difficult.---
 
-  - Multiple encoding formats further complicate detection.
-
-- **Limitations:**## Additional Red Team/Blue Team Research Notes
-
-  - Not cryptographically secure for protecting sensitive data.
 
   - Behavioral and contextual analysis can still reveal usage.### Red Team
 
@@ -359,7 +326,6 @@ Decrypted: Attack at dawn!
 ```
 
 (syn[0-9]{4}|sxxyxxn[0-9]{4}|sxyxxnx[0-9]{4}|xsxyxnx[0-9]{4}|sxyxnxx[0-9]{4})### Blue Team
-
 ```- **Detection Engineering:**
 
   - Develop YARA rules for repeated alphanumeric patterns (2 real, 1 junk) or for the presence of `enc.log` artifacts.
@@ -404,13 +370,17 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 - [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic)
 
-- [ ] Add more junk patterns and adaptive masking##
+- [ ] Add more junk patterns and adaptive masking## Research & Development Roadmap
 
-- [ ] Provide Python and PowerShell wrappers- 
+- [ ] Provide Python and PowerShell wrappers- [ ] Add support for file and binary payloads
 
-- [ ] Peer review and cryptanalysis -
-      
-- [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic)
+- [ ] Peer review and cryptanalysis- [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic)
+
+- [ ] Add more junk patterns and adaptive masking
+
+---- [ ] Provide Python and PowerShell wrappers
+
+- [ ] Peer review and cryptanalysis
 
 ## FAQ
 
@@ -442,7 +412,7 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 - Decryption is impossible without both the correct key and the exact header (seed+nonce).## Comparison to Other Encryption Schemes
 
-  
+
 ### Red Team Use Cases
 - **Payload Evasion:** SynCrypt's polymorphic, junk-masked output can evade YARA, regex, and static pattern-based detection.
 - **C2 Channels:** Obfuscated output can be tunneled through text-based protocols, blending with noisy traffic.
