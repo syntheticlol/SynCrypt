@@ -442,26 +442,7 @@ rule SynCrypt_EncodedPattern- **Reverse Engineering:**
 
 - Decryption is impossible without both the correct key and the exact header (seed+nonce).## Comparison to Other Encryption Schemes
 
-
-
----| Feature                | SynCrypt                | AES (CBC/CTR)         | RC4/ChaCha20           | XOR/Stream Ciphers     |
-
-|------------------------|-------------------------|-----------------------|------------------------|------------------------|
-
-## License & Disclaimer| Key Size               | 256 bits (32 bytes)     | 128/192/256 bits      | 128/256 bits           | Any                    |
-
-MIT License. This tool is for research, red team, and blue team development only. Do not use for protecting sensitive data in production environments.| Header Size            | 48 bytes (masked)       | 16 bytes (IV)         | 8-12 bytes (nonce)     | None/Optional          |
-
-| Output Polymorphism    | High (junk, seed+nonce) | Low (IV/nonce only)   | Low (nonce only)       | None                   |
-
----| Output Obfuscation     | Junk-masked, non-base64 | None (raw/base64)     | None (raw/base64)      | None                   |
-
-| Detection Resistance   | High (junk, variable)   | Low                   | Low                    | Very Low               |
-
-| Standardized           | No (custom)             | Yes                   | Yes                    | No                     |
-| Performance            | Moderate                | High                  | High                   | Very High              |
-| Cryptanalysis          | Not peer-reviewed       | Peer-reviewed         | Peer-reviewed          | Weak                   |
-
+  
 ### Red Team Use Cases
 - **Payload Evasion:** SynCrypt's polymorphic, junk-masked output can evade YARA, regex, and static pattern-based detection.
 - **C2 Channels:** Obfuscated output can be tunneled through text-based protocols, blending with noisy traffic.
