@@ -147,6 +147,7 @@ rule SynCrypt_EncodedPattern {
 ## 🛠️ Research & Development Roadmap
 
 - [ ] Add support for file and binary payloads
+- [ ] Integrate with C2 frameworks (e.g., Cobalt Strike, Mythic, Merlin, Covenant)
 - [ ] Add more junk patterns and adaptive masking
 - [ ] Provide Python and PowerShell wrappers
 - [ ] Peer review and cryptanalysis
